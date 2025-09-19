@@ -1,0 +1,162 @@
+# 보안 파일
+.env*
+!.env.example
+*.key
+*.pem
+*.p8
+*.p12
+*.cer
+secrets/
+credentials/
+
+# Python/FastAPI (백엔드)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 가상환경
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# PyCharm
+.idea/
+*.swp
+*.swo
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ═══════════════════════════════════════════════════
+# ⚛️ React Native/Expo (프론트엔드)
+# ═══════════════════════════════════════════════════
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Expo
+.expo/
+dist/
+web-build/
+.expo-shared/
+
+# React Native
+# Android
+android/app/build/
+android/app/release/
+android/gradle/
+android/build/
+android/.gradle/
+android/local.properties
+android/app/debug/
+
+# iOS
+ios/build/
+ios/DerivedData/
+ios/*.xcworkspace/xcuserdata
+ios/*.xcodeproj/xcuserdata
+ios/Pods/
+
+# Metro
+.metro-health-check*
+
+# ═══════════════════════════════════════════════════
+# 📁 일반 개발 파일
+# ═══════════════════════════════════════════════════
+# 로그 파일
+*.log
+logs/
+
+# 임시 파일
+*.tmp
+*.temp
+*~
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 에디터 설정
+.vscode/
+.sublime-*
+*.sublime-workspace
+
+# ═══════════════════════════════════════════════════
+# 🗄️ 데이터베이스 및 캐시
+# ═══════════════════════════════════════════════════
+*.db
+*.sqlite
+*.sqlite3
+.cache/
+.parcel-cache/
+
+# ═══════════════════════════════════════════════════
+# 📁 프로젝트별 파일
+# ═══════════════════════════════════════════════════
+# 업로드된 파일 (용량이 클 수 있음)
+uploads/
+media/
+static_files/
+
+# 백업 파일
+*.bak
+*.backup
+backup_*/
+
+# 테스트 결과
+test-results/
+coverage/
+.nyc_output/
+
+# 문서 빌드 결과
+docs/_build/
+docs/build/
+site/
+
+# ═══════════════════════════════════════════════════
+# 🤖 Claude Code 관련 파일 (프로젝트별 제외)
+# ═══════════════════════════════════════════════════
+.claude/
+docs/
+
+# 개발 과정 문서 (필요시 별도 저장소 관리)
+# *.md 파일은 상황에 따라 포함/제외 결정
