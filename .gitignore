@@ -1,4 +1,6 @@
-# 보안 파일
+# ═══════════════════════════════════════════════════
+# 🔒 보안 파일 (절대 커밋하면 안됨)
+# ═══════════════════════════════════════════════════
 .env*
 !.env.example
 *.key
@@ -9,7 +11,9 @@
 secrets/
 credentials/
 
-# Python/FastAPI (백엔드)
+# ═══════════════════════════════════════════════════
+# 🐍 Python/FastAPI (백엔드)
+# ═══════════════════════════════════════════════════
 __pycache__/
 *.py[cod]
 *$py.class
@@ -60,6 +64,7 @@ dmypy.json
 # ═══════════════════════════════════════════════════
 # ⚛️ React Native/Expo (프론트엔드)
 # ═══════════════════════════════════════════════════
+# Node.js
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -75,6 +80,7 @@ yarn-error.log*
 dist/
 web-build/
 .expo-shared/
+expo-env.d.ts
 
 # React Native
 # Android
@@ -85,6 +91,10 @@ android/build/
 android/.gradle/
 android/local.properties
 android/app/debug/
+*.orig.*
+*.jks
+*.mobileprovision
+.kotlin/
 
 # iOS
 ios/build/
@@ -96,16 +106,6 @@ ios/Pods/
 # Metro
 .metro-health-check*
 metro.config.js*
-
-# Expo 추가 파일
-expo-env.d.ts
-.expo-shared/
-
-# React Native 추가
-*.orig.*
-*.jks
-*.mobileprovision
-.kotlin/
 
 # TypeScript
 *.tsbuildinfo
