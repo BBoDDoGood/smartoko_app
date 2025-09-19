@@ -27,7 +27,6 @@ class MediaRepository(BaseRepository):
             query = (select(DetectionResult, Device.device_label, ModelProductLang.product_name)
                      .join(Device, DetectionResult.device_seq == Device.device_seq)
                      .join(ModelProduct, DetectionResult.model_product_seq == ModelProduct.model_product_seq)
-                     .join(ModelProduct, DetectionResult.model_product_seq == ModelProduct.model_product_seq)
                      .join(ModelProductLang, and_(
                          ModelProduct.model_product_seq == ModelProductLang.model_product_seq,
                          ModelProductLang.lang_tag == lang_tag))
@@ -237,7 +236,7 @@ class MediaRepository(BaseRepository):
             }
         except SQLAlchemyError as e:
             await self.session.rollback()
-            raise Exception(f"미디어 통게 조회 중 데이터 베이스 오류 발생: {str(e)}")
+            raise Exception(f"미디어 통계 조회 중 데이터 베이스 오류 발생: {str(e)}")
         except Exception as e:
             raise Exception(f"미디어 통계 조회 중 오류 발생: {str(e)}")
         
