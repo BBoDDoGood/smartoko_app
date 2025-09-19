@@ -95,6 +95,20 @@ ios/Pods/
 
 # Metro
 .metro-health-check*
+metro.config.js*
+
+# Expo 추가 파일
+expo-env.d.ts
+.expo-shared/
+
+# React Native 추가
+*.orig.*
+*.jks
+*.mobileprovision
+.kotlin/
+
+# TypeScript
+*.tsbuildinfo
 
 # ═══════════════════════════════════════════════════
 # 📁 일반 개발 파일
