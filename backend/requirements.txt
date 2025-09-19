@@ -1,0 +1,25 @@
+# FastAPI 관련 패키지 (Python 3.13 호환 버전)
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+pydantic==2.10.0
+pydantic-settings==2.6.0
+
+# 데이터베이스 관련
+sqlalchemy==2.0.36
+aiomysql==0.2.0
+pymysql==1.1.1
+
+# 인증 관련
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.20
+
+# 환경변수 관리
+python-dotenv==1.0.1
+
+# 유틸리티
+python-dateutil==2.9.0
+
+# 미디어 처리 관련 (이미지/동영상 처리)
+Pillow==10.4.0          # 이미지 처리 (썸네일 생성, 리사이징)
+ffmpeg-python==0.2.0    # 동영상 처리 (클립 추출, 포맷 변환)
