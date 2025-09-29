@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, CHAR
+from sqlalchemy import Column, Integer, String, DateTime, Text, CHAR, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core.database import Base
@@ -10,13 +10,13 @@ class User(Base):
     # 기본 사용자 정보
     user_seq = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(128), unique=True, nullable=False)
-    password = Column(String(256), nullable=False)  # SHA512실제
+    password = Column(String(256), nullable=False)  # SHA512
     fullname = Column(String(128), nullable=True)
     email = Column(String(128), nullable=True)
     phone = Column(String(16), nullable=True)
 
     # 상태 관리
-    enabled = Column(CHAR(1), nullable=False, default='0')  # DB 실제 타입 (CHAR)
+    enabled = Column(CHAR(1), nullable=False, default='0')  # 활성화 여부(0:비활성화 / 1:활성화)
     password_wrong_cnt = Column(Integer, nullable=False, default=0)  # DB에서 NOT NULL
     status = Column(CHAR(1), nullable=False, default='B')  # B 기본값
     status_msg = Column(Text, nullable=True)
@@ -42,6 +42,7 @@ class User(Base):
 
     # 관계 정의
     subscriptions = relationship("ModelProductSubscription", back_populates="user")
+    user_roles = relationship("UserRole", back_populates="user")
     
 class LoginLog(Base):
     """로그인 로그 테이블"""
@@ -60,16 +61,28 @@ class SpringSession(Base):
 
     PRIMARY_ID = Column(CHAR(36), primary_key=True)
     SESSION_ID = Column(CHAR(36), unique=True, nullable=False, index=True)
-    CREATION_TIME = Column(Integer, nullable=False)  # bigint(20)
-    LAST_ACCESS_TIME = Column(Integer, nullable=False)  # bigint(20)
-    MAX_INACTIVE_INTERVAL = Column(Integer, nullable=False)  # int(11)
-    EXPIRY_TIME = Column(Integer, nullable=False)  # bigint(20)
-    PRINCIPAL_NAME = Column(String(100), nullable=True)  # varchar(100)
+    CREATION_TIME = Column(Integer, nullable=False)
+    LAST_ACCESS_TIME = Column(Integer, nullable=False)
+    MAX_INACTIVE_INTERVAL = Column(Integer, nullable=False)
+    EXPIRY_TIME = Column(Integer, nullable=False)
+    PRINCIPAL_NAME = Column(String(100), nullable=True)
 
 class SpringSessionAttributes(Base):
     """Spring Session 속성 테이블 - 세션 데이터 저장"""
     __tablename__ = "SPRING_SESSION_ATTRIBUTES"
 
     SESSION_PRIMARY_ID = Column(CHAR(36), primary_key=True)
-    ATTRIBUTE_NAME = Column(String(200), primary_key=True)  # varchar(200)
-    ATTRIBUTE_BYTES = Column(Text, nullable=False)  # blob → Text로 JSON 저장
+    ATTRIBUTE_NAME = Column(String(200), primary_key=True)
+    ATTRIBUTE_BYTES = Column(Text, nullable=False)  # blob -> Text로 JSON 저장
+
+class UserRole(Base):
+    """사용자 권한 테이블 - tbl_user_roles"""
+    __tablename__ = "tbl_user_roles"
+
+    user_roles_seq = Column(Integer, primary_key=True, autoincrement=True)
+    roles_seq = Column(Integer, nullable=False)  # 권한 레벨 (10=일반, 11, 13 = 관리자?)
+    user_seq = Column(Integer, ForeignKey("tbl_user.user_seq"), nullable=False)
+    reg_dt = Column(DateTime, nullable=True)
+
+    # 관계 정의
+    user = relationship("User", back_populates="user_roles")

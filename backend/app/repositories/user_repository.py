@@ -6,7 +6,7 @@ from pathlib import Path
 import os
 
 from app.repositories.base_repository import BaseRepository
-from app.models.user import User, LoginLog
+from app.models.user import User, LoginLog, UserRole
 from app.core.auth import verify_password
 
 class UserRepository(BaseRepository):
@@ -81,6 +81,109 @@ class UserRepository(BaseRepository):
         except Exception as e:
             self.logger.error(f"사용자 기본 정보 조회 오류 [user_seq={user_seq}]: {str(e)}")
             return None
+
+    #MediaService 권한 시스템
+    async def get_user_by_id(self, user_id: int) -> Optional[User]:
+        """사용자 ID로 기본 정보 조회 - MediaService에서 사용"""
+        try:
+            user = await self.find_by_id(User, user_id)
+
+            if user:
+                self.logger.info(f"사용자 ID 조회 성공: {user_id}")
+                return user
+            else:
+                self.logger.warning(f"사용자 ID 조회 실패: {user_id}")
+                return None
+
+        except SQLAlchemyError as e:
+            self.logger.error(f"사용자 ID 조회 오류 [user_id={user_id}]: {str(e)}")
+            return None
+
+    async def get_user_role_seq(self, user_id: int) -> Optional[int]:
+        """tbl_user_roles에서 사용자 권한 조회 - ORM 방식"""
+        try:
+            # UserRole에서 권한 조회
+            result = await self.db.execute(
+                select(UserRole.roles_seq)
+                .where(UserRole.user_seq == user_id)
+                .order_by(UserRole.user_roles_seq.desc())
+                .limit(1)
+            )
+            role_seq = result.scalar_one_or_none()
+
+            if role_seq is not None:
+                role_seq = int(role_seq)
+                self.logger.info(f"사용자 권한 조회 성공 [user_id={user_id}, roles_seq={role_seq}]")
+                return role_seq
+            else:
+                self.logger.warning(f"사용자 권한 정보 없음: {user_id}")
+                return None
+
+        except SQLAlchemyError as e:
+            self.logger.error(f"사용자 권한 조회 오류 [user_id={user_id}]: {str(e)}")
+            return None
+
+    async def is_admin_user(self, user_id: int) -> bool:
+        """관리자 권한 체크 - roles_seq 11, 13 둘 다 관리자로 처리"""
+        try:
+            role_seq = await self.get_user_role_seq(user_id)
+
+            if role_seq is None:
+                self.logger.warning(f"권한 체크 실패 - 사용자 권한 정보 없음: {user_id}")
+                return False
+
+            # 11, 13 둘 다 관리자로 처리
+            admin_roles = [11, 13]
+            is_admin = role_seq in admin_roles
+
+            if is_admin:
+                self.logger.info(f"관리자 권한 확인 [user_id={user_id}, roles_seq={role_seq}]")
+            else:
+                self.logger.info(f"일반 사용자 [user_id={user_id}, roles_seq={role_seq}]")
+
+            return is_admin
+
+        except Exception as e:
+            self.logger.error(f"관리자 권한 체크 오류 [user_id={user_id}]: {str(e)}")
+            return False
+
+    async def get_user_permissions(self, user_id: int) -> List[str]:
+        """사용자 권한 목록 조회"""
+        try:
+            role_seq = await self.get_user_role_seq(user_id)
+
+            if role_seq is None:
+                self.logger.warning(f"권한 조회 실패 - 사용자 권한 정보 없음: {user_id}")
+                return ["read"]  # 기본: 읽기만 허용
+
+            # 간단한 권한 체계
+            if role_seq == 10:
+                permissions = ["read", "upload"]  # 일반 사용자 <- 10
+            elif role_seq in [11, 13]:
+                permissions = ["read", "upload", "delete", "admin"]  # 관리자 (11, 13 동일)
+            else:
+                permissions = ["read"]  # 알 수 없는 역할은 읽기만
+                self.logger.warning(f"알 수 없는 roles_seq: {role_seq} - 기본 권한 적용")
+
+            self.logger.info(f"사용자 권한 [user_id={user_id}, roles_seq={role_seq}]: {permissions}")
+            return permissions
+
+        except Exception as e:
+            self.logger.error(f"사용자 권한 조회 오류 [user_id={user_id}]: {str(e)}")
+            return ["read"]
+
+    async def can_delete_media(self, user_id: int) -> bool:
+        """미디어 삭제 권한 체크"""
+        try:
+            permissions = await self.get_user_permissions(user_id)
+            can_delete = "delete" in permissions
+
+            self.logger.info(f"미디어 삭제 권한 체크 [user_id={user_id}]: {'허용' if can_delete else '거부'}")
+            return can_delete
+
+        except Exception as e:
+            self.logger.error(f"미디어 삭제 권한 체크 오류 [user_id={user_id}]: {str(e)}")
+            return False
         
     async def save_login_log(self, user_seq: int, ip_address: str, device_type: str) -> bool:
         """로그인 로그 저장 -  ip로 국가 코드 자동 추출"""
