@@ -1,0 +1,17 @@
+{
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "emailPlaceholder": "Please enter your email",
+    "passwordPlaceholder": "Please enter your password",
+    "loginButton": "Login",
+    "loggingIn": "Logging in...",
+    "selectLanguage": "Language",
+    "loginRequired": "Please enter both email and password.",
+    "loginFailed": "Login Failed",
+    "loginFailedMessage": "Login failed.",
+    "error": "Error",
+    "serverError": "Failed to connect to server."
+  }
+}

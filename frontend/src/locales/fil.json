@@ -1,0 +1,17 @@
+{
+  "login": {
+    "title": "Mag-login",
+    "email": "Email",
+    "password": "Password",
+    "emailPlaceholder": "Pakilagay ang inyong email",
+    "passwordPlaceholder": "Pakilagay ang inyong password",
+    "loginButton": "Mag-login",
+    "loggingIn": "Naglo-login...",
+    "selectLanguage": "Pumili ng Wika",
+    "loginRequired": "Pakilagay ang email at password.",
+    "loginFailed": "Hindi Nagtagumpay ang Pag-login",
+    "loginFailedMessage": "Hindi nagtagumpay ang pag-login.",
+    "error": "Mali",
+    "serverError": "Hindi makakonekta sa server."
+  }
+}

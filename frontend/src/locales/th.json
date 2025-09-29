@@ -1,0 +1,17 @@
+{
+  "login": {
+    "title": "เข้าสู่ระบบ",
+    "email": "อีเมล",
+    "password": "รหัสผ่าน",
+    "emailPlaceholder": "กรุณาใส่อีเมล",
+    "passwordPlaceholder": "กรุณาใส่รหัสผ่าน",
+    "loginButton": "เข้าสู่ระบบ",
+    "loggingIn": "กำลังเข้าสู่ระบบ...",
+    "selectLanguage": "เลือกภาษา",
+    "loginRequired": "กรุณาใส่อีเมลและรหัสผ่าน",
+    "loginFailed": "เข้าสู่ระบบไม่สำเร็จ",
+    "loginFailedMessage": "เข้าสู่ระบบไม่สำเร็จ",
+    "error": "ข้อผิดพลาด",
+    "serverError": "การเชื่อมต่อเซิร์ฟเวอร์ล้มเหลว"
+  }
+}

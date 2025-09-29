@@ -1,0 +1,17 @@
+{
+  "login": {
+    "title": "登录",
+    "email": "邮箱",
+    "password": "密码",
+    "emailPlaceholder": "请输入邮箱",
+    "passwordPlaceholder": "请输入密码",
+    "loginButton": "登录",
+    "loggingIn": "登录中...",
+    "selectLanguage": "语言选择",
+    "loginRequired": "请输入邮箱和密码。",
+    "loginFailed": "登录失败",
+    "loginFailedMessage": "登录失败。",
+    "error": "错误",
+    "serverError": "服务器连接失败。"
+  }
+}

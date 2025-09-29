@@ -1,0 +1,17 @@
+{
+  "login": {
+    "title": "ログイン",
+    "email": "メール",
+    "password": "パスワード",
+    "emailPlaceholder": "メールアドレスを入力してください",
+    "passwordPlaceholder": "パスワードを入力してください",
+    "loginButton": "ログイン",
+    "loggingIn": "ログイン中...",
+    "selectLanguage": "言語選択",
+    "loginRequired": "メールアドレスとパスワードを両方入力してください。",
+    "loginFailed": "ログイン失敗",
+    "loginFailedMessage": "ログインに失敗しました。",
+    "error": "エラー",
+    "serverError": "サーバーへの接続に失敗しました。"
+  }
+}

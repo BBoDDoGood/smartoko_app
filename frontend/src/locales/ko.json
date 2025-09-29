@@ -1,0 +1,17 @@
+{
+  "login": {
+    "title": "로그인",
+    "email": "이메일",
+    "password": "비밀번호",
+    "emailPlaceholder": "이메일을 입력하세요",
+    "passwordPlaceholder": "비밀번호를 입력하세요",
+    "loginButton": "로그인",
+    "loggingIn": "로그인 중...",
+    "selectLanguage": "언어 선택",
+    "loginRequired": "이메일과 비밀번호를 모두 입력해 주세요.",
+    "loginFailed": "로그인 실패",
+    "loginFailedMessage": "로그인에 실패했습니다.",
+    "error": "오류",
+    "serverError": "서버 연결에 실패했습니다."
+  }
+}
