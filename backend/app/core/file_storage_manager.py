@@ -638,3 +638,16 @@ class ProductionFileStorageManager:
 
 # 전역 파일 스토리지 매니저 인스턴스 (의존성 주입용)
 production_file_storage = ProductionFileStorageManager()
+
+async def save_detection_media(self, file_content: bytes, original_filename: str, device_name: str, detection_time: datetime, file_type:str) -> Dict[str, Any]:
+    """
+    미디어 파일 통합 저장 메서드 (mediaservice 에서 사용)
+    file_content: 업로드된 파일의 바이너리 데이터
+    original_filename: 원본 파일명
+    device_name: 디바이스명
+    detection_time: 탐지 발생 시간
+    file_type: 파일 타입
+    """
+    file_creation_time = datetime.now()
+    
+    try: 
