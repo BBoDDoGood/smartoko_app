@@ -16,7 +16,6 @@ from app.schemas.dashboard import (
     RecentAlert,
     DashboardCompleteData
 )
-from backend.app.routers import dashboard
 
 class DashboardService:
     """대시보드 비즈니스 로직 서비스

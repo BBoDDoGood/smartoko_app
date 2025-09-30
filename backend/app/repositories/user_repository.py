@@ -217,6 +217,11 @@ class UserRepository(BaseRepository):
         try:
             import geoip2.database
             import geoip2.errors
+        except ImportError as e:
+            self.logger.warning(f"geoip2 라이브러리 없음, 기본 국가코드 99 사용: {str(e)}")
+            return "99"
+
+        try:
             
             # 로컬/개발 환경 처리
             local_addresses = ["127.0.0.1", "localhost", "::1", "0:0:0:0:0:0:0:1"]
@@ -253,11 +258,6 @@ class UserRepository(BaseRepository):
         
         except FileNotFoundError:
             self.logger.error(f"GeoIP 데이터베이스 파일 접근 실패: {db_path if 'db_path' in locals() else '경로 계산 실패'}")
-            return "99"
-        
-        except ImportError as e:
-            self.logger.error(f"geoip2 라이브러리 import 실패: {str(e)}")
-            self.logger.error(f"pip install geoip2 명령어로 설치해주세요")
             return "99"
         
         except Exception as e:

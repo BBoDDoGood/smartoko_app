@@ -9,7 +9,6 @@ from typing import Optional, Dict, List, Tuple, Any
 from datetime import datetime
 from dataclasses import dataclass
 
-# 실제 미디어 처리를 위한 import
 try:
     from PIL import Image, ImageOps
     PILLOW_AVAILABLE = True
@@ -485,10 +484,6 @@ class ProductionFileStorageManager:
                 storage_environment=self.current_environment,
             )
 
-    # 운영 관련 기능들은 제거됨 - 시스템 운영은 별도 도구에서 관리
-    # - get_total_storage_usage_info(): 스토리지 모니터링 → Prometheus/Grafana
-    # - cleanup_orphaned_files(): 파일 정리 → Cron Job/운영 스크립트
-
     def _create_thumbnail_image(
         self,
         source_path: Path,
@@ -500,7 +495,7 @@ class ProductionFileStorageManager:
         실제 썸네일 이미지 생성 (Pillow 사용)
         - 비율 유지하며 리사이징
         - 고품질 JPEG 압축
-        - 파일 크기 최적화 (보통 원본의 5-10% 수준)
+        - 파일 크기 최적화
         """
         if not PILLOW_AVAILABLE:
             logger.warning("Pillow가 설치되지 않아 원본 파일을 복사합니다.")
@@ -529,7 +524,7 @@ class ProductionFileStorageManager:
                 )
 
             logger.info(
-                f"✅ 썸네일 생성 완료: 원본 {img.size} → 썸네일 {thumb_size}, 품질 {jpeg_quality}%"
+                f" 썸네일 생성 완료: 원본 {img.size} → 썸네일 {thumb_size}, 품질 {jpeg_quality}%"
             )
 
         except Exception as e:
@@ -547,10 +542,7 @@ class ProductionFileStorageManager:
         detection_timestamp: Optional[datetime] = None
     ) -> None:
         """
-        실제 동영상 클립 추출 (FFmpeg 사용)
-        - 탐지 시점 기준 전후 클립 추출
-        - 고효율 H.264 인코딩
-        - DB 용량 99.7% 절약 효과 (30분 → 10초)
+        동영상 클립 추출 (FFmpeg 사용)
         """
         if not FFMPEG_AVAILABLE:
             logger.warning("ffmpeg-python이 설치되지 않아 원본 파일을 복사합니다.")
@@ -609,6 +601,241 @@ class ProductionFileStorageManager:
             shutil.copy2(source_path, destination_path)
             raise RuntimeError(f"동영상 클립 추출 중 오류 발생: {str(e)}")
 
+    async def save_detection_media(
+        self,
+        file_content: bytes,
+        original_filename: str,
+        device_name: str,
+        detection_time: datetime,
+        file_type: str
+    ) -> Dict[str, Any]:
+        """
+        미디어 파일 통합 저장 메서드 (MediaService에서 사용)
+
+        Args:
+            file_content: 업로드된 파일의 바이너리 데이터
+            original_filename: 원본 파일명 (예: "camera_001.jpg")
+            device_name: 디바이스명 (예: "device_001", "CAM-01")
+            detection_time: 탐지 발생 시간 (datetime 객체)
+            file_type: 파일 타입 ("image", "video", "video_clip")
+
+        Returns:
+            Dict: 저장 결과와 생성된 URL들
+        """
+        start_time = datetime.now()
+
+        try:
+            logger.info(f"미디어 파일 저장 시작: {original_filename} (타입: {file_type})")
+
+            # 1. 임시 파일 생성 및 저장
+            temp_dir = Path("/tmp/smartoko_upload")
+            temp_dir.mkdir(exist_ok=True)
+
+            # 안전한 임시 파일명 생성
+            safe_filename = "".join(
+                c for c in original_filename
+                if c.isalnum() or c in ".-_"
+            )
+
+            # 고유한 임시 파일명 (타임스탬프 + 마이크로초)
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
+            temp_file_path = temp_dir / f"temp_{timestamp}_{safe_filename}"
+
+            # 파일 내용을 임시 위치에 저장
+            with open(temp_file_path, "wb") as f:
+                f.write(file_content)
+
+            logger.debug(f"임시 파일 생성: {temp_file_path} (크기: {len(file_content):,} bytes)")
+
+            # 2. device_name에서 device_id 추출
+            device_id = self._extract_device_id_from_name(device_name)
+
+            # 3. 임시 detection_seq 생성
+            detection_seq = int(datetime.now().timestamp() * 1000000) % 999999
+
+            # 4. 파일 타입별 처리 및 URL 생성
+            result_urls = {}
+            processing_errors = []
+
+            if file_type.lower() in ["image", "jpg", "jpeg", "png", "bmp", "webp", "tiff"]:
+                # 원본 이미지 저장
+                image_result = self.store_detection_image_file(
+                    str(temp_file_path),
+                    device_id,
+                    detection_seq,
+                    detection_time
+                )
+
+                if image_result.success:
+                    result_urls["image_url"] = image_result.file_url
+                    logger.info(f"원본 이미지 저장 성공: {image_result.file_url}")
+
+                    # 같은 이미지로 썸네일 자동 생성
+                    thumbnail_result = self.store_thumbnail_image_file(
+                        str(temp_file_path),
+                        device_id,
+                        detection_seq,
+                        detection_time
+                    )
+
+                    if thumbnail_result.success:
+                        result_urls["thumbnail_url"] = thumbnail_result.file_url
+                        logger.info(f"썸네일 생성 성공: {thumbnail_result.file_url}")
+                    else:
+                        processing_errors.append(f"썸네일 생성 실패: {thumbnail_result.error_message}")
+                        logger.warning(f"썸네일 생성 실패: {thumbnail_result.error_message}")
+
+                else:
+                    error_msg = f"이미지 저장 실패: {image_result.error_message}"
+                    logger.error(error_msg)
+                    return self._create_error_response(error_msg, file_type, original_filename, start_time)
+
+            elif file_type.lower() in ["video", "mp4", "mov", "avi", "mkv", "webm", "video_clip"]:
+                # 동영상 클립 저장
+                video_result = self.store_video_clip_file(
+                    str(temp_file_path),
+                    device_id,
+                    detection_seq,
+                    detection_time
+                )
+
+                if video_result.success:
+                    result_urls["video_url"] = video_result.file_url
+                    logger.info(f"동영상 클립 저장 성공: {video_result.file_url}")
+                else:
+                    error_msg = f"동영상 저장 실패: {video_result.error_message}"
+                    logger.error(error_msg)
+                    return self._create_error_response(error_msg, file_type, original_filename, start_time)
+
+            else:
+                error_msg = f"지원하지 않는 파일 타입: {file_type}"
+                logger.error(error_msg)
+                return self._create_error_response(
+                    error_msg, file_type, original_filename, start_time,
+                    extra_data={"supported_types": ["image", "video", "video_clip"]}
+                )
+
+            # 5. 임시 파일 정리
+            try:
+                temp_file_path.unlink()
+                logger.debug(f"임시 파일 삭제 완료: {temp_file_path}")
+            except Exception as cleanup_error:
+                logger.warning(f"임시 파일 삭제 실패 (무시됨): {cleanup_error}")
+
+            # 6. 성공 결과 생성
+            processing_time = (datetime.now() - start_time).total_seconds() * 1000
+
+            success_response = {
+                "success": True,
+                "detection_id": detection_seq,
+                "device_id": device_id,
+                "device_name": device_name,
+                "file_type": file_type,
+                "original_filename": original_filename,
+                "processing_time_ms": round(processing_time, 2),
+                "generated_files": len(result_urls),
+                "storage_environment": self.current_environment,
+                **result_urls
+            }
+
+            # 경고사항이 있으면 추가
+            if processing_errors:
+                success_response["warnings"] = processing_errors
+
+            logger.info(
+                f"미디어 저장 완료 [device_id={device_id}, file_type={file_type}, "
+                f"processing_time={processing_time:.1f}ms]: 생성된 파일 {len(result_urls)}개"
+            )
+
+            return success_response
+
+        except Exception as e:
+            # 예외 발생시 임시 파일 정리
+            try:
+                if 'temp_file_path' in locals() and temp_file_path.exists():
+                    temp_file_path.unlink()
+                    logger.debug(f"예외 발생으로 임시 파일 정리: {temp_file_path}")
+            except Exception:
+                pass
+
+            error_msg = f"미디어 파일 저장 중 예외 발생: {str(e)}"
+            logger.error(error_msg, exc_info=True)
+
+            return self._create_error_response(error_msg, file_type, original_filename, start_time)
+
+    def _extract_device_id_from_name(self, device_name: str) -> int:
+        """
+        디바이스명에서 ID 추출
+
+        Args:
+            device_name: "device_001", "Device-123", "CAM_05" 등
+
+        Returns:
+            int: 추출된 디바이스 ID (기본값: 1)
+        """
+        try:
+            import re
+
+            # 디바이스명에서 모든 숫자 추출
+            numbers = re.findall(r'\d+', device_name)
+
+            if numbers:
+                # 첫 번째 숫자를 디바이스 ID로 사용
+                device_id = int(numbers[0])
+
+                # 범위 검증 (1-9999)
+                if 1 <= device_id <= 9999:
+                    logger.debug(f"디바이스 ID 추출 성공: '{device_name}' → {device_id}")
+                    return device_id
+                else:
+                    logger.warning(f"디바이스 ID 범위 초과: {device_id}, 기본값 1 사용")
+                    return 1
+            else:
+                logger.info(f"디바이스명에서 숫자를 찾을 수 없음: '{device_name}', 기본값 1 사용")
+                return 1
+
+        except Exception as e:
+            logger.warning(f"디바이스 ID 추출 실패: {str(e)}, 기본값 1 사용")
+            return 1
+
+    def _create_error_response(
+        self,
+        error_message: str,
+        file_type: str,
+        original_filename: str,
+        start_time: datetime,
+        extra_data: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        표준화된 에러 응답 생성
+
+        Args:
+            error_message: 에러 메시지
+            file_type: 파일 타입
+            original_filename: 원본 파일명
+            start_time: 처리 시작 시간
+            extra_data: 추가 데이터
+
+        Returns:
+            Dict: 표준화된 에러 응답
+        """
+        processing_time = (datetime.now() - start_time).total_seconds() * 1000
+
+        error_response = {
+            "success": False,
+            "error": error_message,
+            "file_type": file_type,
+            "original_filename": original_filename,
+            "processing_time_ms": round(processing_time, 2),
+            "storage_environment": self.current_environment,
+            "timestamp": datetime.now().isoformat()
+        }
+
+        if extra_data:
+            error_response.update(extra_data)
+
+        return error_response
+
     def check_media_processing_dependencies(self) -> Dict[str, bool]:
         """
         미디어 처리 의존성 확인 (시스템 진단용)
@@ -638,16 +865,3 @@ class ProductionFileStorageManager:
 
 # 전역 파일 스토리지 매니저 인스턴스 (의존성 주입용)
 production_file_storage = ProductionFileStorageManager()
-
-async def save_detection_media(self, file_content: bytes, original_filename: str, device_name: str, detection_time: datetime, file_type:str) -> Dict[str, Any]:
-    """
-    미디어 파일 통합 저장 메서드 (mediaservice 에서 사용)
-    file_content: 업로드된 파일의 바이너리 데이터
-    original_filename: 원본 파일명
-    device_name: 디바이스명
-    detection_time: 탐지 발생 시간
-    file_type: 파일 타입
-    """
-    file_creation_time = datetime.now()
-    
-    try: 

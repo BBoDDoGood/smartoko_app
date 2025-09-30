@@ -60,7 +60,7 @@ class SpringSession(Base):
     __tablename__ = "SPRING_SESSION"
 
     PRIMARY_ID = Column(CHAR(36), primary_key=True)
-    SESSION_ID = Column(CHAR(36), unique=True, nullable=False, index=True)
+    SESSION_ID = Column(String(100), unique=True, nullable=False, index=True)
     CREATION_TIME = Column(Integer, nullable=False)
     LAST_ACCESS_TIME = Column(Integer, nullable=False)
     MAX_INACTIVE_INTERVAL = Column(Integer, nullable=False)
