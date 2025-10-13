@@ -1,17 +1,46 @@
 {
   "login": {
-    "title": "Mag-login",
+    "title": "Mag-login sa inyong Account",
     "email": "Email",
     "password": "Password",
-    "emailPlaceholder": "Pakilagay ang inyong email",
-    "passwordPlaceholder": "Pakilagay ang inyong password",
-    "loginButton": "Mag-login",
-    "loggingIn": "Naglo-login...",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "forgotPassword": "Nakalimutan ang password?",
+    "signInButton": "Mag-login",
+    "signingIn": "Naglo-login...",
+    "noAccount": "Walang account?",
+    "signUpLink": "Mag-sign up",
     "selectLanguage": "Pumili ng Wika",
     "loginRequired": "Pakilagay ang email at password.",
     "loginFailed": "Hindi Nagtagumpay ang Pag-login",
     "loginFailedMessage": "Hindi nagtagumpay ang pag-login.",
     "error": "Mali",
     "serverError": "Hindi makakonekta sa server."
+  },
+  "signup": {
+    "title": "Gumawa ng bagong account",
+    "mandatoryFields": "Kinakailangang Patlang",
+    "optionalFields": "Opsyonal na Patlang",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "repeatPasswordPlaceholder": "Ulitin ang Password",
+    "firstNamePlaceholder": "Pangalan",
+    "lastNamePlaceholder": "Apelyido",
+    "phonePlaceholder": "Numero ng Telepono",
+    "agreeTermsLabel": "Sumasang-ayon ako at gumawa ng aking account",
+    "signUpButton": "Mag-sign Up",
+    "fillRequired": "Pakipunan ang lahat ng kinakailangang patlang.",
+    "invalidEmail": "Pakipasok ang wastong email address.",
+    "passwordMismatch": "Hindi tugma ang mga password.",
+    "weakPassword": "Ang password ay dapat na hindi bababa sa 8 na character.",
+    "invalidPhone": "Ang numero ng telepono ay dapat na 10-16 na numero lamang.",
+    "agreeTerms": "Pakisang-ayon sa mga tuntunin.",
+    "success": "Matagumpay ang Pag-sign Up",
+    "successMessage": "Matagumpay na nagawa ang inyong account.",
+    "error": "May naganap na mali sa pag-sign up."
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "Kanselahin"
   }
 }

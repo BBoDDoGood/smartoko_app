@@ -1,17 +1,46 @@
 {
   "login": {
-    "title": "Login",
+    "title": "Login to your Account",
     "email": "Email",
     "password": "Password",
-    "emailPlaceholder": "Please enter your email",
-    "passwordPlaceholder": "Please enter your password",
-    "loginButton": "Login",
-    "loggingIn": "Logging in...",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "forgotPassword": "Forgot password?",
+    "signInButton": "Sign In",
+    "signingIn": "Signing in...",
+    "noAccount": "Don't have an account?",
+    "signUpLink": "Sign up",
     "selectLanguage": "Language",
     "loginRequired": "Please enter both email and password.",
     "loginFailed": "Login Failed",
     "loginFailedMessage": "Login failed.",
     "error": "Error",
     "serverError": "Failed to connect to server."
+  },
+  "signup": {
+    "title": "Create a new account",
+    "mandatoryFields": "Mandatory Fields",
+    "optionalFields": "Optional Fields",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "repeatPasswordPlaceholder": "Repeat the Password",
+    "firstNamePlaceholder": "First Name",
+    "lastNamePlaceholder": "Last Name",
+    "phonePlaceholder": "Phone Number",
+    "agreeTermsLabel": "I Agree and Create My Account",
+    "signUpButton": "Sign Up",
+    "fillRequired": "Please fill in all required fields.",
+    "invalidEmail": "Please enter a valid email address.",
+    "passwordMismatch": "Passwords do not match.",
+    "weakPassword": "Password must be at least 8 characters long.",
+    "invalidPhone": "Phone number must be 10-16 digits only.",
+    "agreeTerms": "Please agree to the terms.",
+    "success": "Sign Up Successful",
+    "successMessage": "Your account has been created successfully.",
+    "error": "An error occurred during sign up."
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel"
   }
 }

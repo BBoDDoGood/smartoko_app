@@ -6,7 +6,7 @@ from pathlib import Path
 
 from app.repositories.media_repository import MediaRepository
 from app.repositories.user_repository import UserRepository
-from app.core.file_storage_manager import ProductionFileStorageManager
+from app.core.file_storage_manager import FileStorageManager
 from app.schemas.media_schemas import (MediaListQuery, MediaListResult, DetectionMedia, UploadRequest, UploadResponse,
                                        DeleteRequest, DeleteResult, MediaStats, ErrorResponse)
 from app.core.config import settings
@@ -24,7 +24,7 @@ class MediaService:
     def __init__(self, media_repo: MediaRepository, user_repo: UserRepository):
         self.media_repo = media_repo
         self.user_repo = user_repo
-        self.file_manager = ProductionFileStorageManager()
+        self.file_manager = FileStorageManager()
         self.logger = logging.getLogger(__name__)
 
         self._setup_audit_logging()

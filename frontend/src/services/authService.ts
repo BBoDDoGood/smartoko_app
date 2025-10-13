@@ -23,6 +23,20 @@ interface LoginResponse {
   expires_in?: number;
 }
 
+interface SignUpData {
+  username: string;
+  password: string;
+  fullname?: string;
+  email?: string;
+  phone?: string;
+}
+
+interface SignUpResponse {
+  success: boolean;
+  message: string;
+  user_seq?: number;
+}
+
 interface AuthTokens {
   access_token?: string;
   session_token?: string;
@@ -31,9 +45,61 @@ interface AuthTokens {
 
 class AuthService {
   /**
+   * 회원가입 요청
+   */
+  async signUp(data: SignUpData): Promise<SignUpResponse> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10초 타임아웃
+
+    try {
+      const response = await fetch(API_ENDPOINTS.SIGNUP, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        console.log('✅ AuthService: 회원가입 성공');
+        return result;
+      } else {
+        return {
+          success: false,
+          message: result.message || '회원가입에 실패했습니다.',
+        };
+      }
+    } catch (error: any) {
+      clearTimeout(timeoutId);
+      console.error('❌ AuthService: 회원가입 오류', error);
+
+      // 타임아웃 에러
+      if (error.name === 'AbortError') {
+        throw new Error('서버 응답 시간이 초과되었습니다.\n네트워크 상태를 확인하거나 잠시 후 다시 시도해주세요.');
+      }
+
+      // 네트워크 에러
+      if (error.message.includes('Network request failed')) {
+        throw new Error('서버에 연결할 수 없습니다.\n네트워크 연결을 확인해주세요.');
+      }
+
+      // 기타 에러
+      throw new Error('회원가입 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.');
+    }
+  }
+
+  /**
    * 로그인 요청
    */
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10초 타임아웃
+
     try {
       const response = await fetch(API_ENDPOINTS.LOGIN, {
         method: 'POST',
@@ -41,7 +107,10 @@ class AuthService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(credentials),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       const data = await response.json();
 
@@ -59,12 +128,30 @@ class AuthService {
         }
 
         console.log('✅ AuthService: 로그인 및 토큰 저장 완료');
+        return data;
+      } else {
+        // 서버에서 실패 응답을 보낸 경우
+        return {
+          success: false,
+          message: data.message || '로그인에 실패했습니다.',
+        };
+      }
+    } catch (error: any) {
+      clearTimeout(timeoutId);
+      console.error('❌ AuthService: 로그인 오류', error);
+
+      // 타임아웃 에러
+      if (error.name === 'AbortError') {
+        throw new Error('서버 응답 시간이 초과되었습니다.\n네트워크 상태를 확인하거나 잠시 후 다시 시도해주세요.');
       }
 
-      return data;
-    } catch (error) {
-      console.error('❌ AuthService: 로그인 오류', error);
-      throw new Error('서버 연결에 실패했습니다. 네트워크를 확인해주세요.');
+      // 네트워크 에러
+      if (error.message.includes('Network request failed')) {
+        throw new Error('서버에 연결할 수 없습니다.\n- Wi-Fi 또는 모바일 데이터 연결을 확인해주세요.\n- 백엔드 서버가 실행 중인지 확인해주세요.');
+      }
+
+      // 기타 에러
+      throw new Error('로그인 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.');
     }
   }
 

@@ -4,6 +4,7 @@ from sqlalchemy import select, and_
 from sqlalchemy.exc import SQLAlchemyError
 from pathlib import Path
 import os
+from datetime import datetime
 
 from app.repositories.base_repository import BaseRepository
 from app.models.user import User, LoginLog, UserRole
@@ -14,6 +15,58 @@ class UserRepository(BaseRepository):
     
     def __init__(self, db: AsyncSession):
         super().__init__(db)
+        
+    async def find_by_email(self, email: str) -> Optional[User]:
+        """이메일로 사용자 조회 - 회원가입 중복 체크용"""
+        try:
+            result = await self.db.execute(select(User).where(User.email == email))
+            user = result.scalar_one_or_none()
+            
+            if user:
+                self.logger.info(f"이메일 조회 성공: {email}")
+            else:
+                self.logger.info(f"이메일 조회 - 신규 사용자: {email}")
+            return user
+        except SQLAlchemyError as e:
+            self.logger.error(f"이메일 조회 오류 [{email}]: {str(e)}")
+            return None
+        
+    async def create_user(self, username: str, hashed_password: str, email: str = None, fullname: str = None, phone: str = None) -> Optional[User]:
+        """ 새 사용자 생성 - 회원가입"""
+        try:
+            new_user = User(
+                username=username,
+                password=hashed_password,
+                email=email,
+                fullname=fullname,
+                phone=phone,
+                enabled='1',  # 앱 회원가입 시 즉시 활성화 (구독자는 바로 로그인 가능)
+                password_wrong_cnt=0,
+                status='B',  # 기본값
+                ai_toggle_yn='Y',
+                reg_dt=datetime.now()
+            )
+            
+            self.db.add(new_user)
+            await self.db.flush()   #user_seq 생성하려고
+            
+            # 기본 권한 부여 (role 10 = 일반 사용자)
+            user_role = UserRole(
+                roles_seq=10,
+                user_seq=new_user.user_seq,
+                reg_dt=datetime.now()
+            )
+            self.db.add(user_role)
+            await self.db.commit()
+            
+            self.logger.info(f"회원가입 성공 [username={username}, user_seq={new_user.user_seq}]")
+            return new_user
+    
+        except SQLAlchemyError as e:
+            await self.db.rollback()
+            self.logger.error(f"회원가입 오류 [username={username}]: {str(e)}")
+            return None
+            
     
     async def find_by_username(self, username: str) -> Optional[User]:
         """사용자명으로 사용자 조회 - 로그인용"""

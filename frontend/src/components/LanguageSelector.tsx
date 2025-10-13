@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  Modal, 
-  FlatList, 
-  StyleSheet, 
-  Dimensions 
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  FlatList,
+  StyleSheet,
+  Dimensions
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { supportedLanguages, changeLanguage } from '../i18n';
@@ -31,7 +31,7 @@ interface LanguageItem {
 export default function LanguageSelector({ style }: LanguageSelectorProps) {
   const { t, i18n } = useTranslation();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  
+
   const currentLanguage = supportedLanguages.find(
     lang => lang.code === i18n.language
   ) || supportedLanguages[0];
@@ -66,8 +66,7 @@ export default function LanguageSelector({ style }: LanguageSelectorProps) {
 
   return (
     <View style={[styles.container, style]}>
-      <Text style={styles.label}>{t('login.selectLanguage')}</Text>
-      
+      {/* 언어 선택 버튼 */}
       <TouchableOpacity
         style={styles.selector}
         onPress={() => setIsModalVisible(true)}
@@ -78,29 +77,36 @@ export default function LanguageSelector({ style }: LanguageSelectorProps) {
         <Text style={styles.dropdownIcon}>▼</Text>
       </TouchableOpacity>
 
+      {/* Modal 팝업 */}
       <Modal
         visible={isModalVisible}
         transparent={true}
         animationType="fade"
         onRequestClose={() => setIsModalVisible(false)}
       >
+        {/* 어두운 배경 (클릭하면 닫힘) */}
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setIsModalVisible(false)}
         >
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>{t('login.selectLanguage')}</Text>
+          {/* Modal 내용 박스 (클릭해도 안 닫힘) */}
+          <TouchableOpacity activeOpacity={1}>
+            <View style={styles.modalContent}>
+              {/* 헤더 */}
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>{t('login.selectLanguage')}</Text>
+              </View>
+
+              {/* 언어 목록 */}
+              <FlatList
+                data={supportedLanguages}
+                keyExtractor={(item) => item.code}
+                renderItem={renderLanguageItem}
+                showsVerticalScrollIndicator={false}
+              />
             </View>
-            
-            <FlatList
-              data={supportedLanguages}
-              keyExtractor={(item) => item.code}
-              renderItem={renderLanguageItem}
-              showsVerticalScrollIndicator={false}
-            />
-          </View>
+          </TouchableOpacity>
         </TouchableOpacity>
       </Modal>
     </View>
@@ -109,38 +115,34 @@ export default function LanguageSelector({ style }: LanguageSelectorProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: Spacing.sm,
+    position: 'relative',
   },
-  label: {
-    fontSize: fs(3.5),
-    color: NeutralColors.gray700,
-    marginBottom: 6,
-    fontWeight: '500',
-  },
+
+  // 언어 선택 버튼
   selector: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: NeutralColors.gray50,
-    borderRadius: 8,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: 12,
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
     borderWidth: 1,
-    borderColor: NeutralColors.gray300,
-    minHeight: 50,
+    borderColor: NeutralColors.gray200,
+    minHeight: 32,
   },
   selectedText: {
-    fontSize: fs(4),
-    color: NeutralColors.gray900,
-    flex: 1,
+    fontSize: fs(3.2),
+    color: NeutralColors.gray700,
+    fontWeight: '500',
   },
   dropdownIcon: {
-    fontSize: fs(3),
+    fontSize: fs(2.5),
     color: NeutralColors.gray500,
-    marginLeft: Spacing.sm,
+    marginLeft: 6,
   },
-  
-  // 모달 스타일
+
+  // Modal 어두운 배경
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -148,18 +150,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: wp(10),
   },
+
+  // Modal 내용 박스
   modalContent: {
     backgroundColor: 'white',
     borderRadius: 16,
-    maxHeight: '70%',
-    width: '100%',
+    width: wp(80),
     maxWidth: 350,
+    maxHeight: '70%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 12,
     elevation: 8,
   },
+
+  // Modal 헤더
   modalHeader: {
     padding: Spacing.lg,
     borderBottomWidth: 1,
@@ -171,8 +177,8 @@ const styles = StyleSheet.create({
     color: NeutralColors.gray900,
     textAlign: 'center',
   },
-  
-  // 언어 아이템 스타일
+
+  // 언어 아이템
   languageItem: {
     padding: Spacing.lg,
     borderBottomWidth: 1,

@@ -1,17 +1,46 @@
 {
   "login": {
-    "title": "เข้าสู่ระบบ",
+    "title": "เข้าสู่ระบบบัญชีของคุณ",
     "email": "อีเมล",
     "password": "รหัสผ่าน",
-    "emailPlaceholder": "กรุณาใส่อีเมล",
-    "passwordPlaceholder": "กรุณาใส่รหัสผ่าน",
-    "loginButton": "เข้าสู่ระบบ",
-    "loggingIn": "กำลังเข้าสู่ระบบ...",
+    "emailPlaceholder": "อีเมล",
+    "passwordPlaceholder": "รหัสผ่าน",
+    "forgotPassword": "ลืมรหัสผ่าน?",
+    "signInButton": "เข้าสู่ระบบ",
+    "signingIn": "กำลังเข้าสู่ระบบ...",
+    "noAccount": "ยังไม่มีบัญชี?",
+    "signUpLink": "สมัครสมาชิก",
     "selectLanguage": "เลือกภาษา",
     "loginRequired": "กรุณาใส่อีเมลและรหัสผ่าน",
     "loginFailed": "เข้าสู่ระบบไม่สำเร็จ",
     "loginFailedMessage": "เข้าสู่ระบบไม่สำเร็จ",
     "error": "ข้อผิดพลาด",
     "serverError": "การเชื่อมต่อเซิร์ฟเวอร์ล้มเหลว"
+  },
+  "signup": {
+    "title": "สร้างบัญชีใหม่",
+    "mandatoryFields": "ข้อมูลที่จำเป็น",
+    "optionalFields": "ข้อมูลเพิ่มเติม",
+    "emailPlaceholder": "อีเมล",
+    "passwordPlaceholder": "รหัสผ่าน",
+    "repeatPasswordPlaceholder": "ยืนยันรหัสผ่าน",
+    "firstNamePlaceholder": "ชื่อ",
+    "lastNamePlaceholder": "นามสกุล",
+    "phonePlaceholder": "เบอร์โทรศัพท์",
+    "agreeTermsLabel": "ฉันยอมรับและสร้างบัญชีของฉัน",
+    "signUpButton": "สมัครสมาชิก",
+    "fillRequired": "กรุณากรอกข้อมูลที่จำเป็นทั้งหมด",
+    "invalidEmail": "กรุณากรอกอีเมลที่ถูกต้อง",
+    "passwordMismatch": "รหัสผ่านไม่ตรงกัน",
+    "weakPassword": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
+    "invalidPhone": "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10-16 หลัก",
+    "agreeTerms": "กรุณายอมรับข้อกำหนด",
+    "success": "สมัครสมาชิกสำเร็จ",
+    "successMessage": "บัญชีของคุณถูกสร้างเรียบร้อยแล้ว",
+    "error": "เกิดข้อผิดพลาดระหว่างการสมัครสมาชิก"
+  },
+  "common": {
+    "ok": "ตกลง",
+    "cancel": "ยกเลิก"
   }
 }

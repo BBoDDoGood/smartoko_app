@@ -1,15 +1,52 @@
-from re import M
 from fastapi import HTTPException
-from app.repositories.user_repository import UserRepository
-from app.models.user import User
-from app.core.auth import create_access_token, generate_session_id
 import hashlib
 from datetime import datetime
+import re
+
+from app.repositories.user_repository import UserRepository
+from app.models.user import User
+from app.core.auth import create_access_token, generate_session_id, hash_password
 
 class AuthService:
     """인증 서비스"""
     def __init__(self, user_repo: UserRepository):
         self.user_repo = user_repo
+        
+    async def register_user(self, username: str, password: str, fullname: str = None, email: str = None, phone: str = None) -> User:
+        """회원가입 처리 - 앱 전용
+        - username: 사용자 로그인 ID (이메일 형식)
+        - fullname: 사용자 이름
+        - email: 사용자 이메일
+        - phone: 사용자 전화번호
+        - password: 평문 비밀번호 (bcrypt 해싱 처리)
+        """
+        # username 중복 확인
+        existing_user = await self.user_repo.find_by_username(username)
+        if existing_user:
+            raise HTTPException(status_code=400, detail="이미 사용 중인 로그인 ID입니다.")
+        
+        # username 이메일 형식 검증
+        email_regex = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
+        if not re.match(email_regex, username):
+            raise HTTPException(status_code=400, detail="아이디는 이메일 형식이어야 합니다.")
+        
+        # 비밀번호 해싱(bcrypt)
+        hashed_password = hash_password(password)
+        
+        # 사용자 생성(enabled='1' - 즉시 활성화)
+        new_user = await self.user_repo.create_user(
+            username=username,
+            email=email,
+            hashed_password=hashed_password,
+            fullname=fullname,
+            phone=phone
+        )
+        
+        if not new_user:
+            raise HTTPException(status_code=500, detail="회원가입 처리 중 오류가 발생했습니다.")
+        
+        return new_user
+        
         
     async def authenticate_user(self, username: str, password: str) -> User:
         """사용자 인증 및 검증"""

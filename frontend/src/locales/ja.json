@@ -1,17 +1,46 @@
 {
   "login": {
-    "title": "ログイン",
+    "title": "アカウントにログイン",
     "email": "メール",
     "password": "パスワード",
-    "emailPlaceholder": "メールアドレスを入力してください",
-    "passwordPlaceholder": "パスワードを入力してください",
-    "loginButton": "ログイン",
-    "loggingIn": "ログイン中...",
+    "emailPlaceholder": "メール",
+    "passwordPlaceholder": "パスワード",
+    "forgotPassword": "パスワードをお忘れですか？",
+    "signInButton": "ログイン",
+    "signingIn": "ログイン中...",
+    "noAccount": "アカウントをお持ちではありませんか？",
+    "signUpLink": "新規登録",
     "selectLanguage": "言語選択",
     "loginRequired": "メールアドレスとパスワードを両方入力してください。",
     "loginFailed": "ログイン失敗",
     "loginFailedMessage": "ログインに失敗しました。",
     "error": "エラー",
     "serverError": "サーバーへの接続に失敗しました。"
+  },
+  "signup": {
+    "title": "新しいアカウントを作成",
+    "mandatoryFields": "必須項目",
+    "optionalFields": "任意項目",
+    "emailPlaceholder": "メール",
+    "passwordPlaceholder": "パスワード",
+    "repeatPasswordPlaceholder": "パスワード確認",
+    "firstNamePlaceholder": "名",
+    "lastNamePlaceholder": "姓",
+    "phonePlaceholder": "電話番号",
+    "agreeTermsLabel": "利用規約に同意してアカウントを作成します",
+    "signUpButton": "新規登録",
+    "fillRequired": "必須項目をすべて入力してください。",
+    "invalidEmail": "有効なメールアドレスを入力してください。",
+    "passwordMismatch": "パスワードが一致しません。",
+    "weakPassword": "パスワードは8文字以上である必要があります。",
+    "invalidPhone": "電話番号は10〜16桁の数字のみです。",
+    "agreeTerms": "利用規約に同意してください。",
+    "success": "登録完了",
+    "successMessage": "アカウントが正常に作成されました。",
+    "error": "登録中にエラーが発生しました。"
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "キャンセル"
   }
 }

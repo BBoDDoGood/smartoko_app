@@ -1,17 +1,46 @@
 {
   "login": {
-    "title": "로그인",
+    "title": "계정에 로그인",
     "email": "이메일",
     "password": "비밀번호",
-    "emailPlaceholder": "이메일을 입력하세요",
-    "passwordPlaceholder": "비밀번호를 입력하세요",
-    "loginButton": "로그인",
-    "loggingIn": "로그인 중...",
+    "emailPlaceholder": "이메일",
+    "passwordPlaceholder": "비밀번호",
+    "forgotPassword": "비밀번호를 잊으셨나요?",
+    "signInButton": "로그인",
+    "signingIn": "로그인 중...",
+    "noAccount": "계정이 없으신가요?",
+    "signUpLink": "회원가입",
     "selectLanguage": "언어 선택",
     "loginRequired": "이메일과 비밀번호를 모두 입력해 주세요.",
     "loginFailed": "로그인 실패",
     "loginFailedMessage": "로그인에 실패했습니다.",
     "error": "오류",
     "serverError": "서버 연결에 실패했습니다."
+  },
+  "signup": {
+    "title": "새 계정 만들기",
+    "mandatoryFields": "필수 입력 사항",
+    "optionalFields": "선택 입력 사항",
+    "emailPlaceholder": "이메일",
+    "passwordPlaceholder": "비밀번호",
+    "repeatPasswordPlaceholder": "비밀번호 확인",
+    "firstNamePlaceholder": "이름",
+    "lastNamePlaceholder": "성",
+    "phonePlaceholder": "전화번호",
+    "agreeTermsLabel": "이용 약관 및 개인정보 처리방침에 동의합니다",
+    "signUpButton": "회원가입",
+    "fillRequired": "필수 항목을 모두 입력하세요.",
+    "invalidEmail": "올바른 이메일 주소를 입력하세요.",
+    "passwordMismatch": "비밀번호가 일치하지 않습니다.",
+    "weakPassword": "비밀번호는 최소 8자 이상이어야 합니다.",
+    "invalidPhone": "전화번호는 10-16자리 숫자만 입력 가능합니다.",
+    "agreeTerms": "이용 약관에 동의해주세요.",
+    "success": "회원가입 완료",
+    "successMessage": "회원가입이 완료되었습니다.",
+    "error": "회원가입 중 오류가 발생했습니다."
+  },
+  "common": {
+    "ok": "확인",
+    "cancel": "취소"
   }
 }

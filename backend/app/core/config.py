@@ -36,7 +36,12 @@ class Settings(BaseSettings):
     log_level: str = Field(default="INFO", description="로그 레벨")
     
     # CORS 설정
-    cors_origins: List[str] = Field(default=["*"], description="허용된 CORS 도메인 목록") 
+    cors_origins: List[str] = Field(default=["*"], description="허용된 CORS 도메인 목록")
+
+    # 웹 API 연동 설정 (Spring 서버)
+    web_api_base_url: str = Field(default="https://web.smartoko.com", description="웹 서버 API 기본 URL")
+    web_api_enabled: bool = Field(default=True, description="웹 API 연동 활성화 여부")
+    web_api_login_endpoint: str = Field(default="/api/auth/login", description="웹 로그인 API 엔드포인트") 
     
     #파일 저장소 설정 ->환경별 분리
     upload_base_directory: str = Field(default="uploads", description="업로드 파일 기본 디렉토리")

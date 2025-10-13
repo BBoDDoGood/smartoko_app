@@ -84,6 +84,7 @@ export const styles = StyleSheet.create({
         shadowRadius: 8,
         elevation: 5,
     },
+
     formTitle: {
         fontSize: fs(5),
         fontWeight: '600',
@@ -200,15 +201,39 @@ export const styles = StyleSheet.create({
         marginBottom: hp(0.5),
         fontFamily: 'monospace',
     },
-});
 
-// 반응형 디버깅용 - 개발 중에만
-if(__DEV__) {
-    console.log('반응형 정보:', {
-        screenWidth,
-        screenHeight,
-        logoWidth: wp(55),
-        logoHeight: hp(10),
-        fontSize: fs(4.2),
-      });
-}
+    // Forgot password 링크
+    forgotPasswordLink: {
+        alignSelf: 'flex-end',
+        marginBottom: 16,
+    },
+    forgotPasswordText: {
+        color: '#6B7280',
+        fontSize: fs(3.5),
+    },
+
+    // Sign up 섹션
+    signUpContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 20,
+        alignItems: 'center',
+    },
+    signUpText: {
+        color: '#6B7280',
+        fontSize: fs(3.5),
+    },
+    signUpLink: {
+        color: '#2563EB',
+        fontSize: fs(3.5),
+        fontWeight: '600',
+    },
+
+    // 저작권 표시
+    copyrightText: {
+        color: '#9CA3AF',
+        fontSize: fs(3),
+        marginTop: 40,
+        textAlign: 'center',
+    },
+});

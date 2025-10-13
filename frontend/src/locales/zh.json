@@ -1,17 +1,46 @@
 {
   "login": {
-    "title": "登录",
+    "title": "登录您的账户",
     "email": "邮箱",
     "password": "密码",
-    "emailPlaceholder": "请输入邮箱",
-    "passwordPlaceholder": "请输入密码",
-    "loginButton": "登录",
-    "loggingIn": "登录中...",
+    "emailPlaceholder": "邮箱",
+    "passwordPlaceholder": "密码",
+    "forgotPassword": "忘记密码？",
+    "signInButton": "登录",
+    "signingIn": "登录中...",
+    "noAccount": "没有账户？",
+    "signUpLink": "注册",
     "selectLanguage": "语言选择",
     "loginRequired": "请输入邮箱和密码。",
     "loginFailed": "登录失败",
     "loginFailedMessage": "登录失败。",
     "error": "错误",
     "serverError": "服务器连接失败。"
+  },
+  "signup": {
+    "title": "创建新账户",
+    "mandatoryFields": "必填项",
+    "optionalFields": "选填项",
+    "emailPlaceholder": "邮箱",
+    "passwordPlaceholder": "密码",
+    "repeatPasswordPlaceholder": "确认密码",
+    "firstNamePlaceholder": "名字",
+    "lastNamePlaceholder": "姓氏",
+    "phonePlaceholder": "电话号码",
+    "agreeTermsLabel": "我同意并创建我的账户",
+    "signUpButton": "注册",
+    "fillRequired": "请填写所有必填项。",
+    "invalidEmail": "请输入有效的邮箱地址。",
+    "passwordMismatch": "密码不匹配。",
+    "weakPassword": "密码必须至少8个字符。",
+    "invalidPhone": "电话号码必须是10-16位数字。",
+    "agreeTerms": "请同意条款。",
+    "success": "注册成功",
+    "successMessage": "您的账户已成功创建。",
+    "error": "注册过程中发生错误。"
+  },
+  "common": {
+    "ok": "确定",
+    "cancel": "取消"
   }
 }
