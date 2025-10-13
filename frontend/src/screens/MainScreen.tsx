@@ -1,21 +1,17 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { mainScreenStyles as styles } from './MainScreen.styles';
+import { useAppDispatch, useAuth } from '../store/hooks';
+import { logout } from '../store/authSlice';
 
-interface User {
-    user_seq: number;
-    username: string;
-    fullname: string | null;
-    email: string;
-    ai_toggle_yn: 'Y' | 'N';
-}
+export default function MainScreen() {
+    const dispatch = useAppDispatch();
+    const { user } = useAuth();
 
-interface MainScreenProps {
-    user: User;
-    onLogout: () => void;
-}
-
-export default function MainScreen({ user, onLogout }: MainScreenProps) {
+    const handleLogout = () => {
+        console.log('🚪 로그아웃 버튼 클릭');
+        dispatch(logout());
+    };
 
     return (
         <View style={styles.container}>
@@ -57,7 +53,7 @@ export default function MainScreen({ user, onLogout }: MainScreenProps) {
 
             {/* 버튼 섹션 */}
             <View style={styles.buttonSection}>
-                <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
+                <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
                     <Text style={styles.logoutButtonText}>로그아웃</Text>
                 </TouchableOpacity>
             </View>

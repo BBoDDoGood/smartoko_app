@@ -74,15 +74,37 @@ async def login(request: Request, login_data: LoginRequest, auth_service: AuthSe
 
         web_data = web_response.json()
 
-        # 웹 API 로그인 실패
+        # 웹 API 로그인 실패 (비밀번호 틀림)
         if not web_data.get("success"):
             print(f"웹 API 로그인 실패: {web_data.get('message')}")
-            return LoginResponse(
-                success=False,
-                message=web_data.get("message", "아이디 또는 비밀번호가 틀렸습니다."),
-                user=None,
-                access_token=None
-            )
+
+            # DB에서 사용자 조회해서 현재 틀린 횟수 확인
+            user = await auth_service.user_repo.find_by_username(login_data.username)
+            if user:
+                # 틀린 횟수 증가
+                user.password_wrong_cnt += 1
+                await auth_service.user_repo.db.commit()
+
+                current_count = user.password_wrong_cnt
+                remaining = 5 - current_count
+
+                print(f"⚠️ 비밀번호 틀림: {login_data.username} ({current_count}/5회)")
+
+                return LoginResponse(
+                    success=False,
+                    message="INVALID_CREDENTIALS",
+                    user=None,
+                    access_token=None,
+                    error_data={"current": current_count, "remaining": remaining}
+                )
+            else:
+                # 사용자가 없는 경우
+                return LoginResponse(
+                    success=False,
+                    message="INVALID_CREDENTIALS",
+                    user=None,
+                    access_token=None
+                )
         
         # 웹 API 로그인 성공 -> DB에서 사용자 정보 조회
         print(f"웹 API 로그인 성공! DB에서 사용자 조회 중: {login_data.username}")
@@ -93,11 +115,41 @@ async def login(request: Request, login_data: LoginRequest, auth_service: AuthSe
             print(f"DB에 사용자 없음: {login_data.username}")
             return LoginResponse(
                 success=False,
-                message="사용자 정보를 찾을 수 없습니다.",
+                message="USER_NOT_FOUND",
                 user=None,
                 access_token=None
             )
-            
+
+        # 🔴 보안 체크 1: 계정 활성화 상태
+        if user.enabled != '1':
+            print(f"❌ 비활성화된 계정: {login_data.username}")
+            return LoginResponse(
+                success=False,
+                message="ACCOUNT_DISABLED",
+                user=None,
+                access_token=None
+            )
+
+        # 🔴 보안 체크 2: 비밀번호 틀림 횟수
+        if user.password_wrong_cnt >= 5:
+            print(f"❌ 계정 잠김 (비밀번호 {user.password_wrong_cnt}회 틀림): {login_data.username}")
+            return LoginResponse(
+                success=False,
+                message="ACCOUNT_LOCKED",
+                user=None,
+                access_token=None
+            )
+
+        # 🔴 보안 체크 3: 계정 상태 (F = Frozen/정지)
+        if user.status == 'F':
+            print(f"❌ 정지된 계정: {login_data.username}, 사유: {user.status_msg}")
+            return LoginResponse(
+                success=False,
+                message="ACCOUNT_FROZEN",
+                user=None,
+                access_token=None
+            )
+
         # 로그인 로그 저장
         client_ip = request.client.host if request.client else "127.0.0.1"
         await auth_service.user_repo.save_login_log(
@@ -105,18 +157,36 @@ async def login(request: Request, login_data: LoginRequest, auth_service: AuthSe
             ip_address=client_ip,
             device_type="APP"
         )
-        
-        # 사용자 정보 변환
+
+        # 사용자 정보 변환 (모든 필드 포함)
         user_info = UserInfo(
             user_seq=user.user_seq,
             username=user.username,
             fullname=user.fullname,
             email=user.email,
+            phone=user.phone,
+            enabled=user.enabled,
+            status=user.status,
+            status_msg=user.status_msg,
+            password_wrong_cnt=user.password_wrong_cnt,
+            group_limit=user.group_limit,
+            device_limit=user.device_limit,
+            alarm_yn=user.alarm_yn,
+            alarm_line_yn=user.alarm_line_yn,
+            alarm_whatsapp_yn=user.alarm_whatsapp_yn,
+            ai_status=user.ai_status,
             ai_toggle_yn=user.ai_toggle_yn,
-            enabled=user.enabled
+            last_access_dt=user.last_access_dt.isoformat() if user.last_access_dt else None,
+            reg_dt=user.reg_dt.isoformat() if user.reg_dt else None
         )
         
         print(f"로그인 성공: {login_data.username}")
+        
+        # 로그인 성공 시 비밀번호 틀림 횟수 리셋
+        if user.password_wrong_cnt > 0:
+            user.password_wrong_cnt = 0
+            await auth_service.user_repo.db.commit()
+            print(f"✅ 비밀번호 틀림 횟수 리셋: {login_data.username}")
         
         # 웹토큰 + 사용자 정보 반환
         return LoginResponse(

@@ -21,9 +21,10 @@ help:
 dev:
 	@echo "🚀 개발환경 서버 시작..."
 	@echo "📋 환경: development"
-	@echo "🌐 주소: http://127.0.0.1:8000"
+	@echo "🌐 로컬: http://127.0.0.1:8000"
+	@echo "🌐 네트워크: http://$(shell ifconfig | grep "inet " | grep -v 127.0.0.1 | head -1 | awk '{print $$2}'):8000"
 	@echo "📖 문서: http://127.0.0.1:8000/api/docs"
-	ENVIRONMENT=development uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+	ENVIRONMENT=development uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 # 스테이징환경 실행  
 staging:

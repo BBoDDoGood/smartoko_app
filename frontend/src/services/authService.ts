@@ -8,13 +8,27 @@ interface LoginCredentials {
 
 interface LoginResponse {
   success: boolean;
-  message: string;
+  message: string;  // 에러 코드 (USER_NOT_FOUND, ACCOUNT_DISABLED 등)
+  error_data?: { count?: number; current?: number; remaining?: number };  // 에러 관련 추가 데이터
   user?: {
     user_seq: number;
     username: string;
     fullname: string | null;
     email: string;
-    ai_toggle_yn: 'Y' | 'N';
+    phone: string | null;
+    enabled: string;  // "0" or "1"
+    status: string;   // "A", "B", "C", "D", "F"
+    status_msg: string | null;
+    password_wrong_cnt: number;
+    group_limit: number;
+    device_limit: number;
+    alarm_yn: string | null;
+    alarm_line_yn: string | null;
+    alarm_whatsapp_yn: string | null;
+    ai_status: string | null;
+    ai_toggle_yn: string | null;
+    last_access_dt: string | null;
+    reg_dt: string | null;
   };
   access_token?: string;
   session_token?: string;
@@ -115,39 +129,25 @@ class AuthService {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // 웹 API는 data.data 안에 토큰 정보가 있음
-        const tokenData = data.data || {};
+        // 백엔드가 반환하는 데이터 구조:
+        // { success, message, user: {...}, access_token, token_type, expires_in }
 
         // 토큰들을 SecureStore에 저장
         await this.saveTokens({
-          access_token: tokenData.access_token || data.access_token,
-          session_token: tokenData.refresh_token, // refresh_token을 session_token으로 사용
-          session_id: undefined,
+          access_token: data.access_token,
+          session_token: data.session_token,
+          session_id: data.session_id,
         });
 
-        // 웹 API는 사용자 정보를 주지 않으므로, 더미 데이터 생성
-        // TODO: 나중에 /api/user/info 엔드포인트로 실제 사용자 정보 가져오기
-        const dummyUser = {
-          user_seq: 1,
-          username: credentials.username,
-          fullname: credentials.username.split('@')[0],
-          email: credentials.username,
-          ai_toggle_yn: 'Y' as 'Y' | 'N',
-        };
-
-        // 사용자 정보 저장
-        await SecureStore.setItemAsync('user_data', JSON.stringify(dummyUser));
+        // 백엔드에서 받은 실제 사용자 정보 저장
+        if (data.user) {
+          await SecureStore.setItemAsync('user_data', JSON.stringify(data.user));
+        }
 
         console.log('✅ AuthService: 로그인 및 토큰 저장 완료');
 
-        // LoginScreen이 기대하는 형식으로 반환
-        return {
-          success: true,
-          message: data.message || '로그인 성공',
-          user: dummyUser,
-          access_token: tokenData.access_token || data.access_token,
-          session_token: tokenData.refresh_token,
-        };
+        // 백엔드 응답을 그대로 반환
+        return data;
       } else {
         // 서버에서 실패 응답을 보낸 경우
         return {

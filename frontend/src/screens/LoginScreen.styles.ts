@@ -224,7 +224,7 @@ export const styles = StyleSheet.create({
         fontSize: fs(3.5),
     },
     signUpLink: {
-        color: '#2563EB',
+        color: PrimaryColors.blue600,
         fontSize: fs(3.5),
         fontWeight: '600',
     },

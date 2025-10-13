@@ -17,7 +17,17 @@
     "loginFailed": "Hindi Nagtagumpay ang Pag-login",
     "loginFailedMessage": "Hindi nagtagumpay ang pag-login.",
     "error": "Mali",
-    "serverError": "Hindi makakonekta sa server."
+    "serverError": "Hindi makakonekta sa server.",
+    "errors": {
+      "USER_NOT_FOUND": "Hindi nahanap ang impormasyon ng user.",
+      "ACCOUNT_DISABLED": "Ang account ay hindi aktibo. Mangyaring makipag-ugnayan sa administrator.",
+      "ACCOUNT_LOCKED": "Ang account ay naka-lock dahil sa {{count}} maling password. Mangyaring makipag-ugnayan sa administrator.",
+      "ACCOUNT_FROZEN": "Ang account ay suspendido. Mangyaring makipag-ugnayan sa administrator.",
+      "INVALID_CREDENTIALS": "Maling email o password. ({{current}}/5 pagsubok)",
+      "INVALID_CREDENTIALS_WARNING": "⚠️ Maling password. {{remaining}} pagsubok na lang ang natitira.",
+      "NETWORK_ERROR": "Hindi makakonekta sa server. Pakisuri ang iyong internet connection.",
+      "SERVER_ERROR": "May error habang nag-login. Pakisubukan muli mamaya."
+    }
   },
   "signup": {
     "title": "Gumawa ng bagong account",

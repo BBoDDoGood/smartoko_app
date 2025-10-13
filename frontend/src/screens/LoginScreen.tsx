@@ -4,22 +4,17 @@ import { useTranslation } from 'react-i18next';
 import { styles } from './LoginScreen.styles';
 import authService from '../services/authService';
 import ScreenLayout from '../components/common/ScreenLayout';
+import { useAppDispatch } from '../store/hooks';
+import { loginSuccess as loginSuccessAction } from '../store/authSlice';
 import '../i18n';
 
-interface User {
-    user_seq: number;
-    username: string;
-    fullname: string | null;
-    email: string;
-    ai_toggle_yn: 'Y' | 'N';
-}
-
 interface LoginScreenProps {
-    onLoginSuccess: (user: User) => void;
+    navigation?: any;
 }
 
-export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
+export default function LoginScreen({ navigation }: LoginScreenProps) {
     const { t } = useTranslation();
+    const dispatch = useAppDispatch();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -39,22 +34,28 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
 
             if (result.success && result.user) {
                 console.log('✅ 로그인 성공:', result.user.username);
+                // Redux 상태 업데이트
+                dispatch(loginSuccessAction(result.user));
                 // 로그인 성공 알림 표시
                 Alert.alert(
                     t('login.loginSuccess'),
-                    t('login.loginSuccessMessage'),
-                    [
-                        {
-                            text: t('common.ok'),
-                            onPress: () => onLoginSuccess(result.user!)
-                        }
-                    ]
+                    t('login.loginSuccessMessage')
                 );
             } else {
-                Alert.alert(t('login.loginFailed'), t('login.loginFailedMessage'));
+                // 백엔드에서 받은 에러 코드를 다국어로 변환
+                const errorKey = `login.errors.${result.message}`;
+                const errorMessage = t(errorKey, { defaultValue: result.message, count: result.error_data?.count, current: result.error_data?.current, remaining: result.error_data?.remaining });
+
+                Alert.alert(t('login.loginFailed'), errorMessage);
+                console.log('❌ 로그인 실패:', result.message, '→', errorMessage);
             }
         } catch (error: any) {
-            Alert.alert(t('login.error'), t('login.serverError'));
+            // 네트워크 에러
+            const errorMessage = error.message.includes('Network request failed')
+                ? t('login.errors.NETWORK_ERROR')
+                : t('login.errors.SERVER_ERROR');
+
+            Alert.alert(t('login.error'), errorMessage);
             console.error('❌ 로그인 오류:', error);
         } finally {
             setIsLoading(false);
@@ -143,7 +144,7 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
                                     <Text style={styles.signUpText}>
                                         {t('login.noAccount')}{' '}
                                     </Text>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => navigation?.navigate('SignUp')}>
                                         <Text style={styles.signUpLink}>
                                             {t('login.signUpLink')}
                                         </Text>

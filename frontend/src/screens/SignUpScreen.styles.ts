@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import { PrimaryColors } from '../core/theme/colors';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -143,8 +144,8 @@ export const styles = StyleSheet.create({
   },
 
   checkboxChecked: {
-    backgroundColor: '#1E40AF', // 블루
-    borderColor: '#1E40AF',
+    backgroundColor: PrimaryColors.blue600,
+    borderColor: PrimaryColors.blue600,
   },
 
   checkboxIcon: {
@@ -161,7 +162,7 @@ export const styles = StyleSheet.create({
 
   // 회원가입 버튼
   signUpButton: {
-    backgroundColor: '#1E40AF', // 블루
+    backgroundColor: PrimaryColors.blue600,
     borderRadius: 8,
     paddingVertical: 16,
     alignItems: 'center',

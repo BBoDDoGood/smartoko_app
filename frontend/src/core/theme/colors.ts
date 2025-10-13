@@ -1,17 +1,17 @@
 // src/core/theme/colors.ts
 
 export const PrimaryColors = {
-  // Main Blue Palette
+  // Main Blue Palette (Navy Blue Theme)
   blue50: '#E3F2FD',
-  blue100: '#BBDEFB', 
+  blue100: '#BBDEFB',
   blue200: '#90CAF9',
   blue300: '#64B5F6',
   blue400: '#42A5F5',
   blue500: '#2196F3',  // Main brand color
-  blue600: '#1E88E5',
-  blue700: '#1976D2',
-  blue800: '#1565C0',
-  blue900: '#0D47A1',
+  blue600: '#1E3A8A',  // 진한 남색 (Navy Blue) - 버튼 기본 색상
+  blue700: '#1E40AF',  // 약간 밝은 남색 - 버튼 눌렀을 때
+  blue800: '#1E3A70',  // 더 진한 남색
+  blue900: '#0D1B3E',  // 가장 진한 남색
 } as const;
 
 export const SemanticColors = {

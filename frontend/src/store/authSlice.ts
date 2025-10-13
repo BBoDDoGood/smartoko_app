@@ -6,9 +6,20 @@ interface SmartOkOUser {
     username: string;
     fullname: string | null;
     email: string;
-    enabled: 0 | 1;
-    status: 'A' | 'B' | 'C' | 'D' | 'F';
-    ai_toggle_yn: 'Y' | 'N';
+    phone: string | null;
+    enabled: string;  // "0" 또는 "1"
+    status: string;   // "A", "B", "C", "D", "F"
+    status_msg: string | null;
+    password_wrong_cnt: number;
+    group_limit: number;
+    device_limit: number;
+    alarm_yn: string | null;
+    alarm_line_yn: string | null;
+    alarm_whatsapp_yn: string | null;
+    ai_status: string | null;
+    ai_toggle_yn: string | null;
+    last_access_dt: string | null;
+    reg_dt: string | null;
 }
 
 interface AuthState {
