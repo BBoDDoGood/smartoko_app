@@ -12,6 +12,8 @@
     "signUpLink": "สมัครสมาชิก",
     "selectLanguage": "เลือกภาษา",
     "loginRequired": "กรุณาใส่อีเมลและรหัสผ่าน",
+    "loginSuccess": "เข้าสู่ระบบสำเร็จ",
+    "loginSuccessMessage": "เข้าสู่ระบบสำเร็จ",
     "loginFailed": "เข้าสู่ระบบไม่สำเร็จ",
     "loginFailedMessage": "เข้าสู่ระบบไม่สำเร็จ",
     "error": "ข้อผิดพลาด",

@@ -12,6 +12,8 @@
     "signUpLink": "注册",
     "selectLanguage": "语言选择",
     "loginRequired": "请输入邮箱和密码。",
+    "loginSuccess": "登录成功",
+    "loginSuccessMessage": "登录成功。",
     "loginFailed": "登录失败",
     "loginFailedMessage": "登录失败。",
     "error": "错误",

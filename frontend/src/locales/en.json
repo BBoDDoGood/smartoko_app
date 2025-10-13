@@ -12,6 +12,8 @@
     "signUpLink": "Sign up",
     "selectLanguage": "Language",
     "loginRequired": "Please enter both email and password.",
+    "loginSuccess": "Login Success",
+    "loginSuccessMessage": "Login successful.",
     "loginFailed": "Login Failed",
     "loginFailedMessage": "Login failed.",
     "error": "Error",

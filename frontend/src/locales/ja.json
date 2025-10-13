@@ -12,6 +12,8 @@
     "signUpLink": "新規登録",
     "selectLanguage": "言語選択",
     "loginRequired": "メールアドレスとパスワードを両方入力してください。",
+    "loginSuccess": "ログイン成功",
+    "loginSuccessMessage": "ログインに成功しました。",
     "loginFailed": "ログイン失敗",
     "loginFailedMessage": "ログインに失敗しました。",
     "error": "エラー",

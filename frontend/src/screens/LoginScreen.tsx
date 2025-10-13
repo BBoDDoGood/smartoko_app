@@ -39,12 +39,22 @@ export default function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
 
             if (result.success && result.user) {
                 console.log('✅ 로그인 성공:', result.user.username);
-                onLoginSuccess(result.user);
+                // 로그인 성공 알림 표시
+                Alert.alert(
+                    t('login.loginSuccess'),
+                    t('login.loginSuccessMessage'),
+                    [
+                        {
+                            text: t('common.ok'),
+                            onPress: () => onLoginSuccess(result.user!)
+                        }
+                    ]
+                );
             } else {
-                Alert.alert(t('login.loginFailed'), result.message || t('login.loginFailedMessage'));
+                Alert.alert(t('login.loginFailed'), t('login.loginFailedMessage'));
             }
         } catch (error: any) {
-            Alert.alert(t('login.error'), error.message || t('login.serverError'));
+            Alert.alert(t('login.error'), t('login.serverError'));
             console.error('❌ 로그인 오류:', error);
         } finally {
             setIsLoading(false);

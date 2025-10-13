@@ -12,6 +12,8 @@
     "signUpLink": "Mag-sign up",
     "selectLanguage": "Pumili ng Wika",
     "loginRequired": "Pakilagay ang email at password.",
+    "loginSuccess": "Matagumpay ang Pag-login",
+    "loginSuccessMessage": "Matagumpay na nag-login.",
     "loginFailed": "Hindi Nagtagumpay ang Pag-login",
     "loginFailedMessage": "Hindi nagtagumpay ang pag-login.",
     "error": "Mali",

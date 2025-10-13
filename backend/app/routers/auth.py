@@ -73,7 +73,6 @@ async def login(request: Request, login_data: LoginRequest, auth_service: AuthSe
         )
 
         web_data = web_response.json()
-        print(f"웹 API 응답: {web_data}")
 
         # 웹 API 로그인 실패
         if not web_data.get("success"):
