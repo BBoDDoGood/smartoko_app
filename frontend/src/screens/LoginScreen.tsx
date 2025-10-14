@@ -44,7 +44,12 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
             } else {
                 // 백엔드에서 받은 에러 코드를 다국어로 변환
                 const errorKey = `login.errors.${result.message}`;
-                const errorMessage = t(errorKey, { defaultValue: result.message, count: result.error_data?.count, current: result.error_data?.current, remaining: result.error_data?.remaining });
+                const errorMessage = t(errorKey, {
+                    defaultValue: result.message,
+                    count: result.error_data?.count,
+                    current: result.error_data?.current,
+                    remaining: result.error_data?.remaining
+                });
 
                 Alert.alert(t('login.loginFailed'), errorMessage);
                 console.log('❌ 로그인 실패:', result.message, '→', errorMessage);

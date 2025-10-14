@@ -23,7 +23,7 @@
       "ACCOUNT_DISABLED": "Account is disabled. Please contact administrator.",
       "ACCOUNT_LOCKED": "Account locked after {{count}} failed login attempts. Please contact administrator.",
       "ACCOUNT_FROZEN": "Account has been suspended. Please contact administrator.",
-      "INVALID_CREDENTIALS": "Invalid email or password. ({{current}}/5 attempts)",
+      "INVALID_CREDENTIALS": "⚠️ Incorrect password. ({{current}}/5 failed, {{remaining}} remaining)",
       "INVALID_CREDENTIALS_WARNING": "⚠️ Incorrect password. {{remaining}} attempts remaining.",
       "NETWORK_ERROR": "Cannot connect to server. Please check your network connection.",
       "SERVER_ERROR": "An error occurred during login. Please try again later."

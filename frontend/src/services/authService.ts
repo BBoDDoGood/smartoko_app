@@ -153,6 +153,7 @@ class AuthService {
         return {
           success: false,
           message: data.message || '로그인에 실패했습니다.',
+          error_data: data.error_data,  // 🔥 에러 추가 데이터 전달 (비밀번호 틀린 횟수 등)
         };
       }
     } catch (error: any) {

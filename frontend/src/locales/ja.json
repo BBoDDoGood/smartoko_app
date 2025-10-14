@@ -23,7 +23,7 @@
       "ACCOUNT_DISABLED": "アカウントが無効化されています。管理者にお問い合わせください。",
       "ACCOUNT_LOCKED": "パスワードを{{count}}回間違えました。管理者にお問い合わせください。",
       "ACCOUNT_FROZEN": "アカウントが停止されています。管理者にお問い合わせください。",
-      "INVALID_CREDENTIALS": "メールアドレスまたはパスワードが間違っています。({{current}}/5回)",
+      "INVALID_CREDENTIALS": "⚠️ パスワードが間違っています。({{current}}/5回失敗、残り{{remaining}}回)",
       "INVALID_CREDENTIALS_WARNING": "⚠️ パスワードが間違っています。残り{{remaining}}回です。",
       "NETWORK_ERROR": "サーバーに接続できません。ネットワーク接続を確認してください。",
       "SERVER_ERROR": "ログイン処理中にエラーが発生しました。しばらくしてから再度お試しください。"
