@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+
+# 개발 환경
+.env
+.env.*
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 테스트
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 기타
+*.md
+.git/
+.gitignore
+Makefile

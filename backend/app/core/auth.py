@@ -1,4 +1,5 @@
 import secrets
+import hashlib
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from jose import JWTError, jwt
@@ -13,13 +14,16 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     - 임시 => 앱에서 가입한 사용자만 로그인 가능
     """
     try:
+        # 긴 비밀번호를 SHA-256으로 먼저 해싱
+        sha256_hash = hashlib.sha256(plain_password.encode('utf-8')).hexdigest()
+        
         # bcrypt 해시 검증 ({bcrypt} prefix 있는 경우)
         if hashed_password.startswith('{bcrypt}'):
             bcrypt_hash = hashed_password.replace('{bcrypt}', '')
-            return pwd_context.verify(plain_password, bcrypt_hash)
+            return pwd_context.verify(sha256_hash, bcrypt_hash)
         # bcrypt 해시 검증 (prefix 없는 경우)
         elif hashed_password.startswith('$2b$') or hashed_password.startswith('$2a$'):
-            return pwd_context.verify(plain_password, hashed_password)
+            return pwd_context.verify(sha256_hash, hashed_password)
         else:
             print(f"지원하지 않는 해시 형식: {hashed_password[:20]}")
             return False
@@ -31,7 +35,9 @@ def hash_password(plain_password: str) -> str:
     """비밀번호 해싱
     bcrypt 해시 생성 후 {bcrypt} prefix 추가
     """
-    bcrypt_hash = pwd_context.has(plain_password)
+    sha256_hash = hashlib.sha256(plain_password.encode('utf-8')).hexdigest()
+
+    bcrypt_hash = pwd_context.hash(sha256_hash)
     return f"{{bcrypt}}{bcrypt_hash}"
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):

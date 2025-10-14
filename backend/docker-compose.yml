@@ -1,0 +1,25 @@
+services:
+  # FastAPI 백엔드 서비스
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smartoko-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - DB_HOST=${DB_HOST:-localhost}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_NAME=${DB_NAME:-smartoko}
+      - DB_USER=${DB_USER:-root}
+      - DB_PASSWORD=${DB_PASSWORD:-password}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-your-secret-key-change-in-production}
+    volumes:
+      # 개발 시 코드 변경사항 실시간 반영
+      - ./app:/app/app
+      # 업로드된 파일 저장
+      - ./uploads:/app/uploads
+      # 로그 저장
+      - ./logs:/app/logs
+    restart: unless-stopped
